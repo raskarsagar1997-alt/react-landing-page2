@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 import {
   CheckCircle2,
@@ -18,9 +18,26 @@ import {
   ShieldCheck,
   Award,
   ArrowRight,
-  Users,
-  Sparkles,
+  Settings,
 } from "lucide-react";
+
+import defaultContent from "./siteContent";
+import { getStoredContent } from "./contentStore";
+
+const siteContent = getStoredContent(defaultContent);
+
+const ICON_MAP = {
+  Smartphone,
+  Laptop,
+  GraduationCap,
+  Zap,
+  InfinityIcon,
+  BookOpen,
+  Volume2,
+  TrendingUp,
+  ShieldCheck,
+  Award,
+};
 
 const c = {
   paper: "#FBF6EC",
@@ -36,140 +53,6 @@ const c = {
   line: "#E4DACB",
   gold: "#D6A94A",
 };
-
-const navLinks = [
-  { href: "#home", label: "Home" },
-  { href: "#features", label: "Features" },
-  { href: "#why-us", label: "Why Us" },
-  { href: "#pricing", label: "Pricing" },
-  { href: "#faq", label: "FAQ" },
-];
-
-const painPoints = [
-  "इंग्रजी समजते पण बोलता येत नाही",
-  "बोलताना योग्य words आठवत नाहीत",
-  "Sentence कसे बनवायचे हे समजत नाही",
-  "लोकांसमोर बोलताना भीती वाटते",
-];
-
-const accessFeatures = [
-  { icon: Smartphone, label: "Mobile Friendly PDF" },
-  { icon: Laptop, label: "Laptop / Tablet" },
-  { icon: GraduationCap, label: "Self Learning" },
-  { icon: Zap, label: "Instant Access" },
-  { icon: InfinityIcon, label: "Lifetime Use" },
-];
-
-const timeline = [
-  {
-    tag: "WEEK 1–2",
-    text: "Simple English sentences बोलायला लागाल — आत्मविश्वास वाढेल",
-  },
-  {
-    tag: "WEEK 3",
-    text: "Conversation करताना confidence वाढेल — भीती कमी होईल",
-  },
-  {
-    tag: "DAY 30",
-    text: "Interview व daily life मध्ये English वापरणे natural वाटेल",
-  },
-];
-
-const testimonials = [
-  {
-    msg: "Mam, ab main office mein thodi-thodi English bolna start kar diya 😊\nConfidence bahut improve hua 🚀",
-    reply: "Great 👍",
-  },
-  {
-    msg: "Main ek housewife hu 😊\nMujhe lagta tha English seekhna mushkil hai\nBut aapne bahut easy bana diya mam ❤️",
-    reply: "Very Nice Ma'am keep learning 👍",
-  },
-  {
-    msg: "Honestly mam, maine bahut courses try kiye 😅\nBut aapki LIVE classes sabse alag aur practical lagi 🔥",
-    reply: "Thank you very much..👍\nKeep learning..👍",
-  },
-];
-
-const offerItems = [
-  {
-    title: "1500+ Daily Use English Sentences",
-    sub: "25 Lessons • Grammar + Vocabulary + Conversation",
-    price: "₹999",
-    free: false,
-  },
-  {
-    title: "1000+ Daily Use English Verbs",
-    sub: "रोज वापरायचे Essential Verbs • Examples",
-    price: "₹299",
-    free: false,
-  },
-  {
-    title: "25 Structured Practice Lessons",
-    sub: "Beginner ते Confident — Step-by-step",
-    price: "₹299",
-    free: false,
-  },
-  {
-    title: "Real Life Topics Practice",
-    sub: "Office • Travel • Daily Conversations",
-    price: "₹499",
-    free: true,
-  },
-];
-
-const whyChooseUs = [
-  {
-    icon: ShieldCheck,
-    title: "Marathi Medium Friendly",
-    text: "प्रत्येक वाक्य Marathi context मध्ये समजावलेलं, त्यामुळे गोंधळ होत नाही.",
-  },
-  {
-    icon: BookOpen,
-    title: "1500+ Real Sentences",
-    text: "Theory नाही, फक्त रोज वापरता येतील असे ready-to-use sentences.",
-  },
-  {
-    icon: InfinityIcon,
-    title: "Lifetime Access",
-    text: "एकदा खरेदी करा, आयुष्यभर वापरा — कोणतेही subscription नाही.",
-  },
-  {
-    icon: Award,
-    title: "Proven Results",
-    text: "हजारो विद्यार्थ्यांनी वापरून आत्मविश्वासाने बोलायला सुरुवात केली.",
-  },
-];
-
-const faqs = [
-  {
-    q: "What is included in the Spoken English E-Book Bundle?",
-    a: "या bundle मध्ये तुम्हाला 1500+ Daily Use English Sentences, 1000+ रोज वापरायचे English Verbs, 25 Structured Practice Lessons आणि Real Life Topics Practice (Office, Travel, Daily Conversations) मिळतात — सगळं एका PDF bundle मध्ये, एकाच वेळी.",
-  },
-  {
-    q: "Who can benefit from this Spoken English E-Book Bundle?",
-    a: "Marathi medium मधून शिकलेले विद्यार्थी, नोकरी करणारे, गृहिणी आणि interview ची तयारी करणारे — ज्यांना इंग्रजी समजते पण बोलताना अडखळतं, त्यांच्यासाठी हे खास बनवलं आहे.",
-  },
-  {
-    q: "Are these E-Books suitable for self-study, or do I need a tutor?",
-    a: "हो, हे E-Books पूर्णपणे self-study साठी डिझाईन केले आहेत. प्रत्येक lesson step-by-step आणि सोप्या भाषेत समजावलेला आहे, त्यामुळे वेगळ्या tutor ची गरज नाही.",
-  },
-  {
-    q: "How does the E-Book bundle help in speaking English fluently?",
-    a: "Grammar चे अवघड rules शिकवण्याऐवजी, ready-to-use sentences आणि daily practice lessons देऊन तुम्ही रोजच्या परिस्थितीत लगेच इंग्रजी बोलायला सुरुवात करू शकता.",
-  },
-  {
-    q: "What if I have questions after purchasing the bundle?",
-    a: "खरेदीनंतर काही शंका असल्यास तुम्ही आमच्याशी WhatsApp किंवा email द्वारे संपर्क करू शकता — आमची टीम मदत करेल.",
-  },
-  {
-    q: "How soon will I get the E-Books after payment?",
-    a: "Payment झाल्यावर लगेच E-Books चा access तुमच्या email वर मिळेल — Instant download, वाट पाहावी लागणार नाही.",
-  },
-  {
-    q: "What payment methods do you support?",
-    a: "आम्ही UPI, Credit/Debit Card, Net Banking आणि सर्व प्रमुख wallets स्वीकारतो — payment पूर्णपणे secure आहे.",
-  },
-];
 
 /* ---------- Reusable animated / motion helpers ---------- */
 
@@ -246,6 +129,7 @@ function AnimatedCounter({ target, suffix = "", duration = 1400 }) {
 
 function CTAButton({ full, small }) {
   const navigate = useNavigate();
+  const { label, price } = siteContent.cta;
 
   return (
     <button
@@ -254,11 +138,12 @@ function CTAButton({ full, small }) {
         small ? "px-4 py-2 text-xs" : "px-7 py-3.5 text-sm sm:text-base"
       } ${full ? "w-full" : ""}`}
     >
-      आत्ताच सुरुवात करा — ₹199
+      {label} — {price}
       <ArrowRight size={small ? 14 : 17} className="cta-arrow" />
     </button>
   );
 }
+
 function Eyebrow({ children }) {
   return (
     <div
@@ -275,6 +160,7 @@ function Eyebrow({ children }) {
 function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const { brand, navLinks } = siteContent;
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 16);
@@ -301,7 +187,8 @@ function Navbar() {
             <BookOpen size={16} style={{ color: c.navy }} />
           </div>
           <span className="headline font-bold text-sm sm:text-base" style={{ color: c.cream }}>
-            Spoken English<span style={{ color: c.gold }}>.</span>
+            {brand.name}
+            <span style={{ color: c.gold }}>.</span>
           </span>
         </div>
 
@@ -319,12 +206,18 @@ function Navbar() {
         </div>
 
         <div className="flex items-center gap-3">
-          <button
-            className="hidden sm:inline-flex items-center gap-1.5 rounded-md text-xs font-bold px-4 py-2 nav-cta"
-          >
+          <button className="hidden sm:inline-flex items-center gap-1.5 rounded-md text-xs font-bold px-4 py-2 nav-cta">
             <Zap size={13} />
-            ₹199 मध्ये मिळवा
+            {brand.navCtaLabel}
           </button>
+          <Link
+            to="/AdminEditor"
+            title="Edit page content"
+            className="hidden sm:inline-flex items-center justify-center w-8 h-8 rounded-full"
+            style={{ color: "#9FACC9" }}
+          >
+            <Settings size={16} />
+          </Link>
           <button
             className="md:hidden"
             onClick={() => setOpen((o) => !o)}
@@ -352,28 +245,46 @@ function Navbar() {
               {l.label}
             </a>
           ))}
+          <Link
+            to="/AdminEditor"
+            onClick={() => setOpen(false)}
+            className="inline-flex items-center gap-1.5 text-sm font-semibold pt-3"
+            style={{ color: "#9FACC9" }}
+          >
+            <Settings size={14} />
+            Edit Page Content
+          </Link>
         </div>
       )}
     </nav>
   );
 }
 
-function RuledDivider() {
-  return (
-    <div
-      className="w-full h-px my-10"
-      style={{
-        backgroundImage: `repeating-linear-gradient(to right, ${c.line} 0, ${c.line} 8px, transparent 8px, transparent 16px)`,
-      }}
-    />
-  );
-}
-
 export default function SpokenEnglishLanding() {
   const [openFaq, setOpenFaq] = useState(0);
   const [seconds, setSeconds] = useState(600);
-  const claimed = 73;
-  const total = 100;
+
+  const {
+    urgencyBanner,
+    hero,
+    painPointsHeading,
+    painPoints,
+    painPointsNote,
+    accessFeatures,
+    productStats,
+    whyChooseUs,
+    timelineSection,
+    testimonialsSection,
+    pricingSection,
+    bonusSection,
+    launchOfferSection,
+    faqSection,
+    cta,
+  } = siteContent;
+
+  const claimed = urgencyBanner.claimed;
+  const total = urgencyBanner.total;
+  const remaining = total - claimed;
 
   useEffect(() => {
     const t = setInterval(() => {
@@ -384,6 +295,13 @@ export default function SpokenEnglishLanding() {
 
   const mm = String(Math.floor(seconds / 60)).padStart(2, "0");
   const ss = String(seconds % 60).padStart(2, "0");
+
+  // {claimed}/{total}/{remaining} placeholders replace करण्यासाठी छोटं helper
+  const fillTemplate = (str) =>
+    str
+      .replace("{claimed}", claimed)
+      .replace("{total}", total)
+      .replace("{remaining}", remaining);
 
   return (
     <div
@@ -398,21 +316,7 @@ export default function SpokenEnglishLanding() {
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap');
         .headline { font-family: 'Baloo 2', sans-serif; }
-        .notebook-margin { position: relative; }
-        .notebook-margin::before {
-          content: "";
-          position: absolute;
-          left: 28px;
-          top: 0;
-          bottom: 0;
-          width: 2px;
-          background: #E7B9AE;
-        }
-        @media (max-width: 640px) {
-          .notebook-margin::before { left: 14px; }
-        }
 
-        /* Nav */
         .nav-link { position: relative; transition: color 0.25s ease; }
         .nav-link::after {
           content: "";
@@ -432,7 +336,6 @@ export default function SpokenEnglishLanding() {
         }
         .nav-cta:hover { transform: translateY(-2px); box-shadow: 0 8px 18px rgba(214,169,74,0.5); }
 
-        /* Premium gradient CTA button with shine sweep */
         .cta-btn {
           position: relative;
           overflow: hidden;
@@ -462,7 +365,6 @@ export default function SpokenEnglishLanding() {
           100% { left: 130%; }
         }
 
-        /* 3D floating book */
         .book-perspective { perspective: 1400px; }
         .book-3d {
           transform-style: preserve-3d;
@@ -478,15 +380,12 @@ export default function SpokenEnglishLanding() {
           0%, 100% { transform: rotateY(-7deg) rotateX(2deg) translateY(0px); }
           50% { transform: rotateY(7deg) rotateX(-2deg) translateY(-12px); }
         }
-        .book-shadow {
-          animation: shadowPulse 7s ease-in-out infinite;
-        }
+        .book-shadow { animation: shadowPulse 7s ease-in-out infinite; }
         @keyframes shadowPulse {
           0%, 100% { transform: scaleX(1); opacity: 0.35; }
           50% { transform: scaleX(0.82); opacity: 0.2; }
         }
 
-        /* 3D depth icons */
         .icon-3d {
           box-shadow: 0 3px 0 rgba(0,0,0,0.06), 0 10px 18px rgba(30,42,74,0.14), inset 0 1px 0 rgba(255,255,255,0.7);
           transition: transform 0.35s ease, box-shadow 0.35s ease;
@@ -496,10 +395,7 @@ export default function SpokenEnglishLanding() {
           box-shadow: 0 6px 0 rgba(0,0,0,0.08), 0 16px 26px rgba(30,42,74,0.2), inset 0 1px 0 rgba(255,255,255,0.7);
         }
 
-        /* Animated / hover cards */
-        .hover-card {
-          transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
-        }
+        .hover-card { transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease; }
         .hover-card:hover {
           transform: translateY(-6px);
           box-shadow: 0 18px 32px rgba(30,42,74,0.14);
@@ -514,20 +410,20 @@ export default function SpokenEnglishLanding() {
         className="w-full text-center py-2.5 px-4 text-xs sm:text-sm font-semibold"
         style={{ backgroundColor: c.navy, color: c.cream }}
       >
-        🔴 पहिल्या {total} लोकांसाठीच हा Price — आधीच {claimed} जणांनी खरेदी केले | ऑफर संपण्यापूर्वी घ्या!
+        {fillTemplate(urgencyBanner.text)}
       </div>
 
       {/* HERO */}
       <section id="home" className="px-6 sm:px-10 md:px-16 pt-14 pb-16 w-full text-center">
         <Reveal>
-          <Eyebrow>🚨 Limited Time Offer</Eyebrow>
+          <Eyebrow>{hero.eyebrow}</Eyebrow>
         </Reveal>
         <Reveal delay={0.05}>
           <h1
             className="headline text-3xl sm:text-4xl md:text-5xl font-extrabold leading-tight mb-5"
             style={{ color: c.navy }}
           >
-            आत्मविश्वासाने इंग्रजी बोलायला सुरुवात करा
+            {hero.headlineLine1}
             <br />
             <span
               style={{
@@ -537,23 +433,24 @@ export default function SpokenEnglishLanding() {
                 backgroundClip: "text",
               }}
             >
-              1500+ Daily Use English Sentences
+              {hero.headlineHighlight}
             </span>
-            <span> Ebook for Beginners</span>
+            <span>{hero.headlineLine2}</span>
           </h1>
         </Reveal>
         <Reveal delay={0.1}>
           <p className="text-base sm:text-lg mb-2" style={{ color: c.muted }}>
-            हा Ebook तुम्हाला step-by-step इंग्रजी बोलायला मदत करेल.
+            {hero.subtext1}
           </p>
           <p className="text-base sm:text-lg mb-8" style={{ color: c.muted }}>
-            Grammar चे मोठे rules न शिकता ready sentences वापरून बोलायला सुरुवात करा.
+            {hero.subtext2}
           </p>
         </Reveal>
-<br></br>
-<hr></hr>
-<br></br>
-<br></br>
+        <br />
+        <hr />
+        <br />
+        <br />
+
         {/* 3D Animated Book mockup */}
         <Reveal delay={0.15}>
           <div className="book-perspective relative mb-8 mx-auto max-w-3xl">
@@ -570,14 +467,12 @@ export default function SpokenEnglishLanding() {
             >
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 items-center">
                 <div className="hidden sm:flex flex-col gap-4">
-                  <div className="rounded-lg p-3 text-left" style={{ backgroundColor: "#28365A" }}>
-                    <p className="text-xs font-bold" style={{ color: c.gold }}>REAL-LIFE ENGLISH</p>
-                    <p className="text-[11px] mt-1" style={{ color: "#C9D2E3" }}>Home • Office • Travel</p>
-                  </div>
-                  <div className="rounded-lg p-3 text-left" style={{ backgroundColor: "#28365A" }}>
-                    <p className="text-xs font-bold" style={{ color: c.gold }}>25 STRUCTURED LESSONS</p>
-                    <p className="text-[11px] mt-1" style={{ color: "#C9D2E3" }}>Step-by-step design</p>
-                  </div>
+                  {hero.bookCard.leftCards.map((card, i) => (
+                    <div key={i} className="rounded-lg p-3 text-left" style={{ backgroundColor: "#28365A" }}>
+                      <p className="text-xs font-bold" style={{ color: c.gold }}>{card.title}</p>
+                      <p className="text-[11px] mt-1" style={{ color: "#C9D2E3" }}>{card.sub}</p>
+                    </div>
+                  ))}
                 </div>
 
                 <div
@@ -588,43 +483,39 @@ export default function SpokenEnglishLanding() {
                     boxShadow: `0 0 0 1px rgba(214,169,74,0.15), 0 10px 24px rgba(0,0,0,0.35)`,
                   }}
                 >
-                  <p className="text-xs font-bold" style={{ color: c.gold }}>1500+</p>
+                  <p className="text-xs font-bold" style={{ color: c.gold }}>{hero.bookCard.badgeNumber}</p>
                   <p className="headline text-xl font-extrabold text-center leading-tight" style={{ color: c.cream }}>
-                    DAILY USE ENGLISH SENTENCES
+                    {hero.bookCard.badgeTitle}
                   </p>
                   <div className="w-full h-px my-1" style={{ backgroundColor: "#3A4A70" }} />
                   <p className="text-[11px] font-semibold text-center" style={{ color: c.gold }}>
-                    MARATHI MEDIUM
+                    {hero.bookCard.badgeSubtitle1}
                   </p>
                   <p className="text-[10px] text-center" style={{ color: "#C9D2E3" }}>
-                    Beginner Friendly
+                    {hero.bookCard.badgeSubtitle2}
                   </p>
                 </div>
 
                 <div className="hidden sm:flex flex-col gap-4">
-                  <div className="rounded-lg p-3 text-left" style={{ backgroundColor: "#28365A" }}>
-                    <p className="text-xs font-bold" style={{ color: c.gold }}>EASY SENTENCE STRUCTURE</p>
-                    <p className="text-[11px] mt-1" style={{ color: "#C9D2E3" }}>Subject • Verb • Object</p>
-                  </div>
-                  <div className="rounded-lg p-3 text-left" style={{ backgroundColor: "#28365A" }}>
-                    <p className="text-xs font-bold" style={{ color: c.gold }}>BEGINNER FRIENDLY</p>
-                    <p className="text-[11px] mt-1" style={{ color: "#C9D2E3" }}>Perfect for Marathi medium</p>
-                  </div>
+                  {hero.bookCard.rightCards.map((card, i) => (
+                    <div key={i} className="rounded-lg p-3 text-left" style={{ backgroundColor: "#28365A" }}>
+                      <p className="text-xs font-bold" style={{ color: c.gold }}>{card.title}</p>
+                      <p className="text-[11px] mt-1" style={{ color: "#C9D2E3" }}>{card.sub}</p>
+                    </div>
+                  ))}
                 </div>
               </div>
 
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-6 pt-5" style={{ borderTop: "1px solid #33436B" }}>
-                {[
-                  { icon: Volume2, label: "Audio Support" },
-                  { icon: BookOpen, label: "Daily Use" },
-                  { icon: TrendingUp, label: "Improve Skills" },
-                  { icon: InfinityIcon, label: "Lifetime Access" },
-                ].map((f, i) => (
-                  <div key={i} className="flex flex-col items-center gap-1.5 text-center">
-                    <f.icon size={18} style={{ color: c.gold }} />
-                    <p className="text-[10px]" style={{ color: "#C9D2E3" }}>{f.label}</p>
-                  </div>
-                ))}
+                {hero.bookCard.bottomFeatures.map((f, i) => {
+                  const Icon = ICON_MAP[f.iconKey];
+                  return (
+                    <div key={i} className="flex flex-col items-center gap-1.5 text-center">
+                      {Icon && <Icon size={18} style={{ color: c.gold }} />}
+                      <p className="text-[10px]" style={{ color: "#C9D2E3" }}>{f.label}</p>
+                    </div>
+                  );
+                })}
               </div>
             </div>
           </div>
@@ -640,7 +531,7 @@ export default function SpokenEnglishLanding() {
         <div className="w-full">
           <Reveal>
             <h2 className="headline text-2xl sm:text-3xl font-bold text-center mb-8" style={{ color: c.navy }}>
-              English बोलताना हे होतं का?
+              {painPointsHeading}
             </h2>
           </Reveal>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
@@ -661,24 +552,27 @@ export default function SpokenEnglishLanding() {
               className="rounded-lg p-5 text-center text-sm sm:text-base font-medium mb-10"
               style={{ backgroundColor: "#FDF1D8", border: `1px solid ${c.gold}`, color: c.navy }}
             >
-              तुम्ही एकटे नाही. अनेक लोकांना English समजते — पण बोलायला सुरुवात कशी करायची हे कळत नाही.
+              {painPointsNote}
             </div>
           </Reveal>
 
           <div className="grid grid-cols-2 sm:grid-cols-5 gap-6 justify-items-center">
-            {accessFeatures.map((f, i) => (
-              <Reveal key={i} delay={i * 0.06}>
-                <div className="flex flex-col items-center gap-2 text-center">
-                  <div
-                    className="icon-3d w-14 h-14 rounded-full flex items-center justify-center"
-                    style={{ backgroundColor: c.paper, border: `1px solid ${c.line}` }}
-                  >
-                    <f.icon size={22} style={{ color: c.navy }} />
+            {accessFeatures.map((f, i) => {
+              const Icon = ICON_MAP[f.iconKey];
+              return (
+                <Reveal key={i} delay={i * 0.06}>
+                  <div className="flex flex-col items-center gap-2 text-center">
+                    <div
+                      className="icon-3d w-14 h-14 rounded-full flex items-center justify-center"
+                      style={{ backgroundColor: c.paper, border: `1px solid ${c.line}` }}
+                    >
+                      {Icon && <Icon size={22} style={{ color: c.navy }} />}
+                    </div>
+                    <p className="text-xs font-medium" style={{ color: c.muted }}>{f.label}</p>
                   </div>
-                  <p className="text-xs font-medium" style={{ color: c.muted }}>{f.label}</p>
-                </div>
-              </Reveal>
-            ))}
+                </Reveal>
+              );
+            })}
           </div>
 
           <div className="flex justify-center mt-10">
@@ -699,31 +593,26 @@ export default function SpokenEnglishLanding() {
                   boxShadow: "0 20px 40px rgba(15,26,51,0.3)",
                 }}
               >
-                <p className="text-sm font-bold" style={{ color: c.gold }}>1500+</p>
+                <p className="text-sm font-bold" style={{ color: c.gold }}>{productStats.cardBadgeNumber}</p>
                 <p className="headline text-2xl font-extrabold text-center" style={{ color: c.cream }}>
-                  Daily Use English Sentences
+                  {productStats.cardTitle}
                 </p>
                 <div className="w-10 h-px" style={{ backgroundColor: c.gold }} />
-                <p className="text-xs font-semibold" style={{ color: "#C9D2E3" }}>Marathi Medium</p>
-                <p className="text-xs" style={{ color: "#C9D2E3" }}>Beginner Friendly</p>
+                <p className="text-xs font-semibold" style={{ color: "#C9D2E3" }}>{productStats.cardSubtitle1}</p>
+                <p className="text-xs" style={{ color: "#C9D2E3" }}>{productStats.cardSubtitle2}</p>
               </div>
             </div>
           </Reveal>
           <Reveal delay={0.1}>
             <div>
               <h2 className="headline text-2xl sm:text-3xl font-bold mb-2" style={{ color: c.navy }}>
-                1500+ Daily Use English Sentences Ebook
+                {productStats.heading}
               </h2>
               <p className="mb-6" style={{ color: c.muted }}>
-                Theory नाही – Practical, Ready-to-Use Sentences
+                {productStats.subheading}
               </p>
               <div className="grid grid-cols-2 gap-3">
-                {[
-                  { n: 1500, suffix: "+", l: "Daily Sentences" },
-                  { n: 25, suffix: "", l: "Structured Lessons" },
-                  { n: 3, suffix: "+", l: "Real Life Topics" },
-                  { n: null, suffix: "", l: "Beginner Friendly", text: "Easy" },
-                ].map((s, i) => (
+                {productStats.stats.map((s, i) => (
                   <div
                     key={i}
                     className="hover-card rounded-lg p-4 text-center"
@@ -732,7 +621,7 @@ export default function SpokenEnglishLanding() {
                     <p className="headline text-xl font-extrabold" style={{ color: c.marigold }}>
                       {s.n !== null ? <AnimatedCounter target={s.n} suffix={s.suffix} /> : s.text}
                     </p>
-                    <p className="text-xs mt-1" style={{ color: c.muted }}>{s.l}</p>
+                    <p className="text-xs mt-1" style={{ color: c.muted }}>{s.label}</p>
                   </div>
                 ))}
               </div>
@@ -746,32 +635,35 @@ export default function SpokenEnglishLanding() {
         <div className="w-full">
           <Reveal>
             <div className="text-center mb-10">
-              <Eyebrow>Why Choose Us</Eyebrow>
+              <Eyebrow>{whyChooseUs.eyebrow}</Eyebrow>
               <h2 className="headline text-2xl sm:text-3xl font-bold" style={{ color: c.navy }}>
-                या Ebook मध्ये असं काय वेगळं आहे?
+                {whyChooseUs.heading}
               </h2>
             </div>
           </Reveal>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {whyChooseUs.map((w, i) => (
-              <Reveal key={i} delay={i * 0.1}>
-                <div
-                  className="hover-card rounded-xl p-5 h-full text-center flex flex-col items-center"
-                  style={{ backgroundColor: c.paper, border: `1px solid ${c.line}` }}
-                >
+            {whyChooseUs.items.map((w, i) => {
+              const Icon = ICON_MAP[w.iconKey];
+              return (
+                <Reveal key={i} delay={i * 0.1}>
                   <div
-                    className="icon-3d w-16 h-16 rounded-full flex items-center justify-center mb-4"
-                    style={{ background: `linear-gradient(150deg, ${c.gold}, ${c.marigold})` }}
+                    className="hover-card rounded-xl p-5 h-full text-center flex flex-col items-center"
+                    style={{ backgroundColor: c.paper, border: `1px solid ${c.line}` }}
                   >
-                    <w.icon size={26} style={{ color: c.navy }} />
+                    <div
+                      className="icon-3d w-16 h-16 rounded-full flex items-center justify-center mb-4"
+                      style={{ background: `linear-gradient(150deg, ${c.gold}, ${c.marigold})` }}
+                    >
+                      {Icon && <Icon size={26} style={{ color: c.navy }} />}
+                    </div>
+                    <h3 className="headline text-base font-bold mb-2" style={{ color: c.navy }}>
+                      {w.title}
+                    </h3>
+                    <p className="text-xs" style={{ color: c.muted }}>{w.text}</p>
                   </div>
-                  <h3 className="headline text-base font-bold mb-2" style={{ color: c.navy }}>
-                    {w.title}
-                  </h3>
-                  <p className="text-xs" style={{ color: c.muted }}>{w.text}</p>
-                </div>
-              </Reveal>
-            ))}
+                </Reveal>
+              );
+            })}
           </div>
           <div className="flex justify-center mt-10">
             <CTAButton />
@@ -784,10 +676,10 @@ export default function SpokenEnglishLanding() {
         <div className="w-full">
           <Reveal>
             <h2 className="headline text-2xl sm:text-3xl font-bold text-center mb-2" style={{ color: c.navy }}>
-              रोज practice केली तर हे होईल
+              {timelineSection.heading}
             </h2>
             <p className="text-center mb-10" style={{ color: c.muted }}>
-              जर तुम्ही रोज थोडी practice केली तर...
+              {timelineSection.subheading}
             </p>
           </Reveal>
           <div className="relative">
@@ -798,7 +690,7 @@ export default function SpokenEnglishLanding() {
               }}
             />
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-              {timeline.map((t, i) => (
+              {timelineSection.items.map((t, i) => (
                 <Reveal key={i} delay={i * 0.12}>
                   <div className="relative flex flex-col items-center text-center">
                     <div
@@ -830,13 +722,13 @@ export default function SpokenEnglishLanding() {
       {/* TESTIMONIALS */}
       <section className="px-6 sm:px-10 md:px-16 py-16 w-full">
         <Reveal>
-          <Eyebrow>Reviews</Eyebrow>
+          <Eyebrow>{testimonialsSection.eyebrow}</Eyebrow>
           <h2 className="headline text-2xl sm:text-3xl font-bold mb-10" style={{ color: c.navy }}>
-            See How Our Students Are Transforming Their English
+            {testimonialsSection.heading}
           </h2>
         </Reveal>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {testimonials.map((t, i) => (
+          {testimonialsSection.items.map((t, i) => (
             <Reveal key={i} delay={i * 0.1}>
               <div
                 className="hover-card rounded-xl p-4 flex flex-col gap-3 h-full"
@@ -866,13 +758,13 @@ export default function SpokenEnglishLanding() {
               className="inline-block text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-4"
               style={{ background: `linear-gradient(135deg, ${c.gold}, ${c.marigold})`, color: c.navy }}
             >
-              Special Launch Offer
+              {pricingSection.badgeLabel}
             </div>
             <h2 className="headline text-2xl sm:text-3xl font-bold mb-3" style={{ color: c.navy }}>
-              Here's Everything You're Getting Today
+              {pricingSection.heading}
             </h2>
             <p className="text-sm" style={{ color: c.muted }}>
-              Ek baar pay karo - lifetime access. Koi subscription nahi. Koi hidden charges nahi.
+              {pricingSection.subheading}
             </p>
           </div>
         </Reveal>
@@ -887,15 +779,15 @@ export default function SpokenEnglishLanding() {
               style={{ background: `linear-gradient(135deg, ${c.marigold}, ${c.marigoldDark})` }}
             >
               <p className="headline text-lg sm:text-xl font-extrabold" style={{ color: c.cream }}>
-                🎁 YOUR COMPLETE SPOKEN ENGLISH EBOOK
+                {pricingSection.cardTitle}
               </p>
               <p className="text-xs mt-1" style={{ color: "#FFF3E1" }}>
-                Everything listed below — one-time payment only
+                {pricingSection.cardSubtitle}
               </p>
             </div>
 
             <div style={{ backgroundColor: c.cream }}>
-              {offerItems.map((item, i) => (
+              {pricingSection.offerItems.map((item, i) => (
                 <div
                   key={i}
                   className="flex items-center justify-between gap-3 px-5 py-4"
@@ -925,23 +817,30 @@ export default function SpokenEnglishLanding() {
               ))}
 
               <div className="flex items-center justify-between px-5 py-4">
-                <p className="text-sm font-semibold" style={{ color: c.navy }}>Total Value</p>
-                <p className="text-sm font-semibold line-through" style={{ color: c.red }}>₹2,096</p>
+                <p className="text-sm font-semibold" style={{ color: c.navy }}>{pricingSection.totalValueLabel}</p>
+                <p className="text-sm font-semibold line-through" style={{ color: c.red }}>
+                  {pricingSection.totalValueStrikethrough}
+                </p>
               </div>
 
               <div
                 className="mx-5 mb-5 rounded-lg p-4 flex items-center justify-between"
                 style={{ background: `linear-gradient(135deg, ${c.navy}, ${c.navyLight})` }}
               >
-                <p className="font-bold text-sm sm:text-base" style={{ color: c.cream }}>You Pay Today</p>
+                <p className="font-bold text-sm sm:text-base" style={{ color: c.cream }}>
+                  {pricingSection.todayPriceLabel}
+                </p>
                 <p className="headline text-2xl font-extrabold" style={{ color: c.gold }}>
-                  ₹199 <span className="text-xs font-semibold align-middle" style={{ color: c.cream }}>ONLY</span>
+                  {pricingSection.todayPrice}{" "}
+                  <span className="text-xs font-semibold align-middle" style={{ color: c.cream }}>
+                    {pricingSection.todayPriceSuffix}
+                  </span>
                 </p>
               </div>
 
               <div className="mx-5 mb-6">
                 <p className="text-xs font-semibold mb-2 text-center" style={{ color: c.green }}>
-                  {claimed} / {total} Copies Claimed — फक्त {total - claimed} Slots शिल्लक • Price नंतर ₹999 होईल
+                  {fillTemplate(pricingSection.claimedNote)}
                 </p>
                 <div className="w-full h-2 rounded-full overflow-hidden" style={{ backgroundColor: c.line }}>
                   <div
@@ -969,20 +868,21 @@ export default function SpokenEnglishLanding() {
             >
               <div className="flex items-center gap-2 mb-5">
                 <Gift size={20} style={{ color: c.marigold }} />
-                <h3 className="headline text-lg font-bold" style={{ color: c.navy }}>Special Bonus</h3>
+                <h3 className="headline text-lg font-bold" style={{ color: c.navy }}>{bonusSection.heading}</h3>
               </div>
-              {[
-                "1000+ Daily Use English Verbs",
-                "25 Structured Practice Lessons",
-                "3+ Real Life Topics Practice",
-              ].map((b, i) => (
-                <div key={i} className="py-3" style={{ borderBottom: i < 2 ? `1px solid ${c.line}` : "none" }}>
+              {bonusSection.items.map((b, i) => (
+                <div
+                  key={i}
+                  className="py-3"
+                  style={{ borderBottom: i < bonusSection.items.length - 1 ? `1px solid ${c.line}` : "none" }}
+                >
                   <p className="text-sm font-semibold" style={{ color: c.navy }}>{b}</p>
-                  <p className="text-xs font-bold mt-0.5" style={{ color: c.green }}>FREE BONUS</p>
+                  <p className="text-xs font-bold mt-0.5" style={{ color: c.green }}>{bonusSection.bonusTagLabel}</p>
                 </div>
               ))}
               <p className="text-xs font-medium mt-4 mb-2" style={{ color: c.muted }}>
-                Slots भरत आहेत... <span style={{ color: c.navy }}>{claimed} / {total} Claimed</span>
+                {bonusSection.slotsNoteLabel}{" "}
+                <span style={{ color: c.navy }}>{claimed} / {total} Claimed</span>
               </p>
               <div className="w-full h-2 rounded-full overflow-hidden" style={{ backgroundColor: c.line }}>
                 <div
@@ -998,18 +898,22 @@ export default function SpokenEnglishLanding() {
               className="hover-card rounded-xl p-6 text-center h-full"
               style={{ background: `linear-gradient(155deg, ${c.navyLight}, ${c.navy})` }}
             >
-              <h3 className="headline text-lg font-bold mb-1" style={{ color: c.cream }}>Special Launch Offer</h3>
-              <p className="text-sm line-through mb-1" style={{ color: "#8A96B4" }}>Regular ₹999</p>
-              <p className="headline text-4xl font-extrabold mb-4" style={{ color: c.gold }}>₹199</p>
+              <h3 className="headline text-lg font-bold mb-1" style={{ color: c.cream }}>
+                {launchOfferSection.heading}
+              </h3>
+              <p className="text-sm line-through mb-1" style={{ color: "#8A96B4" }}>
+                {launchOfferSection.regularPriceStrikethrough}
+              </p>
+              <p className="headline text-4xl font-extrabold mb-4" style={{ color: c.gold }}>
+                {launchOfferSection.price}
+              </p>
               <div className="text-left inline-block">
-                {["1500+ Sentences", "25 Lessons", "Real Life English", "Instant Access", "1000+ Verbs (FREE)"].map(
-                  (f, i) => (
-                    <div key={i} className="flex items-center gap-2 py-1">
-                      <CheckCircle2 size={16} style={{ color: c.gold }} />
-                      <p className="text-sm" style={{ color: c.cream }}>{f}</p>
-                    </div>
-                  )
-                )}
+                {launchOfferSection.features.map((f, i) => (
+                  <div key={i} className="flex items-center gap-2 py-1">
+                    <CheckCircle2 size={16} style={{ color: c.gold }} />
+                    <p className="text-sm" style={{ color: c.cream }}>{f}</p>
+                  </div>
+                ))}
               </div>
             </div>
           </Reveal>
@@ -1025,15 +929,15 @@ export default function SpokenEnglishLanding() {
         <div className="max-w-3xl mx-auto">
           <Reveal>
             <h2 className="headline text-2xl sm:text-3xl font-bold text-center mb-2" style={{ color: c.navy }}>
-              तुमच्या मनातील प्रश्न
+              {faqSection.heading}
             </h2>
             <p className="text-center mb-10" style={{ color: c.muted }}>
-              खरेदी करण्यापूर्वी हे नक्की वाचा.
+              {faqSection.subheading}
             </p>
           </Reveal>
 
           <div className="flex flex-col gap-3">
-            {faqs.map((f, i) => (
+            {faqSection.items.map((f, i) => (
               <Reveal key={i} delay={i * 0.05}>
                 <div
                   className="hover-card rounded-lg overflow-hidden"
@@ -1095,7 +999,7 @@ export default function SpokenEnglishLanding() {
           style={{ backgroundColor: c.navy, color: c.cream }}
         >
           <BookOpen size={16} />
-          आत्ताच खरेदी करा — ₹199
+          {cta.stickyBarLabel} — {cta.price}
         </button>
       </div>
     </div>
