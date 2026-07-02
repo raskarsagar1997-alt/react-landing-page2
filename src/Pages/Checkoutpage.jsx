@@ -9,6 +9,16 @@ import {
   Mail,
   Phone,
 } from "lucide-react";
+import defaultContent from "./siteContent";
+import { getStoredContent } from "./contentStore";
+
+// ============================================================================
+// सर्व TEXT / PRICE / LIST content siteContent.js मधल्या "checkoutSection" मध्ये आहे.
+// AdminEditor page वरून "Checkout Page" tab मध्ये बदल केला की हा page आपोआप
+// update होईल.
+// ============================================================================
+const siteContent = getStoredContent(defaultContent);
+const { checkoutSection: cs } = siteContent;
 
 const c = {
   paper: "#FBF6EC",
@@ -24,33 +34,6 @@ const c = {
   line: "#E4DACB",
   gold: "#D6A94A",
 };
-
-const offerItems = [
-  {
-    title: "1500+ Daily Use English Sentences",
-    sub: "25 Lessons • Grammar + Vocabulary + Conversation",
-    price: "₹999",
-    free: false,
-  },
-  {
-    title: "1000+ Daily Use English Verbs",
-    sub: "रोज वापरायचे Essential Verbs • Examples",
-    price: "₹299",
-    free: false,
-  },
-  {
-    title: "25 Structured Practice Lessons",
-    sub: "Beginner ते Confident — Step-by-step",
-    price: "₹299",
-    free: false,
-  },
-  {
-    title: "Real Life Topics Practice",
-    sub: "Office • Travel • Daily Conversations",
-    price: "₹499",
-    free: true,
-  },
-];
 
 function useCountdown(initial = 300) {
   const [seconds, setSeconds] = useState(initial);
@@ -97,11 +80,17 @@ export default function CheckoutPage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
-  const [payMethod, setPayMethod] = useState("razorpay");
-  const claimed = 73;
-  const total = 100;
-  const totalValue = 2096;
-  const finalPrice = 199;
+  const [payMethod, setPayMethod] = useState(cs.payment.methods[0]);
+
+  const claimed = cs.claimed;
+  const total = cs.total;
+  const remaining = total - claimed;
+
+  const fillTemplate = (str) =>
+    str
+      .replace("{claimed}", claimed)
+      .replace("{total}", total)
+      .replace("{remaining}", remaining);
 
   return (
     <div
@@ -176,7 +165,7 @@ export default function CheckoutPage() {
           className="headline text-2xl sm:text-3xl md:text-4xl font-extrabold leading-tight mb-4"
           style={{ color: c.navy }}
         >
-          थांबा! तुम्ही{" "}
+          {cs.headlineLine1}{" "}
           <span
             style={{
               background: `linear-gradient(135deg, ${c.marigold}, ${c.red})`,
@@ -185,13 +174,12 @@ export default function CheckoutPage() {
               backgroundClip: "text",
             }}
           >
-            1500+ English Sentences
-          </span>{" "}
-          मिळवण्यापासून एकच Step दूर आहात
+            {cs.headlineHighlight}
+          </span>
+          {cs.headlineLine2}
         </h1>
         <p className="text-sm sm:text-base font-medium max-w-2xl mx-auto" style={{ color: c.navyLight }}>
-          Grammar rules पाठ करण्याची गरज नाही. खाली Details भरा आणि आत्ताच Lifetime Access
-          मिळवा — फक्त ₹199 मध्ये.
+          {cs.subtext}
         </p>
       </div>
 
@@ -204,26 +192,26 @@ export default function CheckoutPage() {
           >
             <FieldInput
               icon={User}
-              label="First Name"
+              label={cs.formLabels.nameLabel}
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="तुमचं नाव टाका"
+              placeholder={cs.formLabels.namePlaceholder}
             />
             <FieldInput
               icon={Mail}
-              label="Email ID"
+              label={cs.formLabels.emailLabel}
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="you@example.com"
+              placeholder={cs.formLabels.emailPlaceholder}
             />
             <FieldInput
               icon={Phone}
-              label="Phone Number"
+              label={cs.formLabels.phoneLabel}
               type="tel"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
-              placeholder="+91 98765 43210"
+              placeholder={cs.formLabels.phonePlaceholder}
             />
           </div>
 
@@ -234,10 +222,10 @@ export default function CheckoutPage() {
           >
             <div className="flex items-center justify-between mb-3">
               <p className="text-xs font-bold uppercase tracking-wide" style={{ color: c.muted }}>
-                Item
+                {cs.orderItem.itemColumnLabel}
               </p>
               <p className="text-xs font-bold uppercase tracking-wide" style={{ color: c.muted }}>
-                Price
+                {cs.orderItem.priceColumnLabel}
               </p>
             </div>
             <div
@@ -250,26 +238,26 @@ export default function CheckoutPage() {
                   style={{ border: `5px solid ${c.navy}` }}
                 />
                 <div>
-                  <p className="text-sm font-bold" style={{ color: c.navy }}>One Time Fee</p>
-                  <p className="text-xs" style={{ color: c.muted }}>One-time payment</p>
+                  <p className="text-sm font-bold" style={{ color: c.navy }}>{cs.orderItem.planTitle}</p>
+                  <p className="text-xs" style={{ color: c.muted }}>{cs.orderItem.planSubtitle}</p>
                 </div>
               </div>
               <p className="text-lg font-extrabold" style={{ color: c.navy }}>
-                <span className="text-xs font-semibold align-top mr-0.5">INR</span>199
+                <span className="text-xs font-semibold align-top mr-0.5">INR</span>{cs.orderItem.planPrice}
               </p>
             </div>
 
             <div className="flex items-center justify-between py-2" style={{ borderTop: `1px dashed ${c.line}` }}>
-              <p className="text-sm" style={{ color: c.muted }}>Pallavi English Classes</p>
-              <p className="text-sm font-semibold" style={{ color: c.navy }}>INR 199</p>
+              <p className="text-sm" style={{ color: c.muted }}>{cs.orderItem.companyName}</p>
+              <p className="text-sm font-semibold" style={{ color: c.navy }}>INR {cs.orderItem.planPrice}</p>
             </div>
             <div
               className="flex items-center justify-between pt-3 mt-2"
               style={{ borderTop: `1px solid ${c.line}` }}
             >
-              <p className="text-sm font-bold uppercase tracking-wide" style={{ color: c.navy }}>Total</p>
+              <p className="text-sm font-bold uppercase tracking-wide" style={{ color: c.navy }}>{cs.orderItem.totalLabel}</p>
               <p className="headline text-xl font-extrabold" style={{ color: c.marigoldDark }}>
-                <span className="text-xs font-semibold align-top mr-0.5">INR</span>199.00
+                <span className="text-xs font-semibold align-top mr-0.5">INR</span>{cs.orderItem.totalPrice}
               </p>
             </div>
           </div>
@@ -280,10 +268,10 @@ export default function CheckoutPage() {
             style={{ backgroundColor: c.cream, border: `1px solid ${c.line}` }}
           >
             <p className="text-xs font-bold uppercase tracking-wide mb-3" style={{ color: c.navy }}>
-              Pay Via
+              {cs.payment.sectionLabel}
             </p>
             <div className="flex items-center gap-6 mb-4">
-              {["razorpay", "cashfree"].map((m) => (
+              {cs.payment.methods.map((m) => (
                 <label key={m} className="flex items-center gap-2 cursor-pointer">
                   <input
                     type="radio"
@@ -304,20 +292,20 @@ export default function CheckoutPage() {
               style={{ border: `1px solid ${c.marigold}`, backgroundColor: "#FDF6EC" }}
             >
               <p className="text-xs font-medium" style={{ color: c.marigoldDark }}>
-                Completing payment with
+                {cs.payment.gatewayNote}
               </p>
               <p className="headline text-lg font-extrabold" style={{ color: "#3B5AA6" }}>
-                Razorpay
+                {cs.payment.gatewayName}
               </p>
             </div>
 
             <button className="w-full rounded-lg font-bold py-3.5 text-sm sm:text-base"
               style={{ backgroundColor: c.green, color: c.cream }}
             >
-              Complete Order
+              {cs.payment.buttonLabel}
             </button>
             <p className="flex items-center justify-center gap-1.5 text-xs mt-3" style={{ color: c.muted }}>
-              <Lock size={12} /> 100% Secure Payment
+              <Lock size={12} /> {cs.payment.secureNote}
             </p>
           </div>
         </div>
@@ -331,10 +319,10 @@ export default function CheckoutPage() {
             <Gift size={20} style={{ color: c.gold }} />
             <div>
               <p className="font-bold text-sm" style={{ color: c.cream }}>
-                आज तुम्हाला हे सगळं मिळतय
+                {cs.summary.giftBoxTitle}
               </p>
               <p className="text-xs" style={{ color: "#C9D2E3" }}>
-                एकदाच Pay करा — Lifetime Access मिळेल
+                {cs.summary.giftBoxSubtitle}
               </p>
             </div>
           </div>
@@ -343,7 +331,7 @@ export default function CheckoutPage() {
             className="rounded-xl overflow-hidden"
             style={{ backgroundColor: c.cream, border: `1px solid ${c.line}` }}
           >
-            {offerItems.map((item, i) => (
+            {cs.offerItems.map((item, i) => (
               <div
                 key={i}
                 className="flex items-center justify-between gap-3 px-5 py-4"
@@ -373,9 +361,9 @@ export default function CheckoutPage() {
             ))}
 
             <div className="flex items-center justify-between px-5 py-4">
-              <p className="text-sm font-semibold" style={{ color: c.navy }}>Total Combined Value</p>
+              <p className="text-sm font-semibold" style={{ color: c.navy }}>{cs.summary.totalCombinedValueLabel}</p>
               <p className="text-sm font-semibold line-through" style={{ color: c.red }}>
-                ₹{totalValue.toLocaleString("en-IN")}
+                {cs.summary.totalValue}
               </p>
             </div>
 
@@ -384,19 +372,19 @@ export default function CheckoutPage() {
               style={{ background: `linear-gradient(135deg, ${c.navy}, ${c.navyLight})` }}
             >
               <div>
-                <p className="font-bold text-sm sm:text-base" style={{ color: c.cream }}>आज तुम्ही Pay करा</p>
+                <p className="font-bold text-sm sm:text-base" style={{ color: c.cream }}>{cs.summary.payTodayLabel}</p>
                 <p className="text-[11px] mt-0.5" style={{ color: "#C9D2E3" }}>
-                  One-time • Lifetime Access • No Subscription
+                  {cs.summary.payTodayNote}
                 </p>
               </div>
               <p className="headline text-2xl sm:text-3xl font-extrabold" style={{ color: c.gold }}>
-                ₹{finalPrice}
+                {cs.summary.finalPrice}
               </p>
             </div>
 
             <div className="mx-5 mb-6">
               <p className="text-xs font-semibold mb-2 text-center" style={{ color: c.green }}>
-                {claimed} / {total} Copies Claimed — फक्त {total - claimed} Slots शिल्लक
+                {fillTemplate(cs.summary.claimedNote)}
               </p>
               <div className="w-full h-2 rounded-full overflow-hidden" style={{ backgroundColor: c.line }}>
                 <div
@@ -409,14 +397,14 @@ export default function CheckoutPage() {
             <div className="px-5 pb-6">
               <button className="cta-btn w-full inline-flex items-center justify-center gap-2 rounded-md font-semibold px-6 py-3.5">
                 <BookOpen size={18} />
-                GET ACCESS NOW
+                {cs.summary.ctaLabel}
               </button>
             </div>
           </div>
 
           <div className="flex items-center justify-center gap-2 mt-4 text-xs" style={{ color: c.muted }}>
             <ShieldCheck size={14} style={{ color: c.green }} />
-            Secure Checkout • Instant Email Delivery
+            {cs.summary.footerNote}
           </div>
         </div>
       </div>
@@ -430,7 +418,7 @@ export default function CheckoutPage() {
         }}
       >
         <p className="text-xs sm:text-sm font-semibold hidden sm:block" style={{ color: c.cream }}>
-          Offer संपायला बाकी:
+          {cs.stickyBar.label}
         </p>
         <div className="flex items-center gap-1.5">
           {["00", mm, ss].map((v, i) => (

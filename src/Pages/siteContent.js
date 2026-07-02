@@ -1,3 +1,18 @@
+// ============================================================================
+// siteContent.js
+// ----------------------------------------------------------------------------
+// हा file म्हणजे तुमच्या Landing Page चा "Content Control Panel" आहे.
+// या page वर दिसणारा प्रत्येक text, price, list item, testimonial, FAQ — सगळं
+// इथून control होतं. इथे बदल केला की तो लगेच page वर दिसेल — कुठलाही JSX
+// (design/layout) code बदलायची गरज नाही.
+//
+// कसं वापरायचं:
+// 1. खाली दिलेल्या कुठल्याही value ला edit करा (मराठी/इंग्रजी text, price, इ.)
+// 2. Array मध्ये नवीन item add करायचा असेल तर त्याच shape चा एक नवीन
+//    object curly-brace `{ ... }` मध्ये टाका आणि comma ने वेगळा करा.
+// 3. Item काढायचा असेल तर तो object array मधून delete करा.
+// 4. File save करा — page आपोआप नवीन content दाखवेल.
+// ============================================================================
 
 const siteContent = {
   // --------------------------------------------------------------------
@@ -17,7 +32,7 @@ const siteContent = {
   ],
 
   // --------------------------------------------------------------------
-  // TOP URGENCY MARQUEE (page)
+  // TOP URGENCY MARQUEE (page च्या अगदी वर लाल पट्टी)
   // --------------------------------------------------------------------
   urgencyBanner: {
     text: "🔴 पहिल्या {total} लोकांसाठीच हा Price — आधीच {claimed} जणांनी खरेदी केले | ऑफर संपण्यापूर्वी घ्या!",
@@ -26,7 +41,7 @@ const siteContent = {
   },
 
   // --------------------------------------------------------------------
-  // CTA BUTTON ()
+  // CTA BUTTON (संपूर्ण page वर वापरलेलं मुख्य बटण)
   // --------------------------------------------------------------------
   cta: {
     label: "आत्ताच सुरुवात करा",
@@ -57,6 +72,7 @@ const siteContent = {
         { title: "EASY SENTENCE STRUCTURE", sub: "Subject • Verb • Object" },
         { title: "BEGINNER FRIENDLY", sub: "Perfect for Marathi medium" },
       ],
+      // iconKey खालील ICON_MAP शी जुळणारा असावा (Volume2, BookOpen, TrendingUp, InfinityIcon)
       bottomFeatures: [
         { iconKey: "Volume2", label: "Audio Support" },
         { iconKey: "BookOpen", label: "Daily Use" },
@@ -67,6 +83,7 @@ const siteContent = {
   },
 
   // --------------------------------------------------------------------
+  // PAIN POINTS ("English बोलताना हे होतं का?")
   // --------------------------------------------------------------------
   painPointsHeading: "English बोलताना हे होतं का?",
   painPoints: [
@@ -77,6 +94,7 @@ const siteContent = {
   ],
   painPointsNote: "तुम्ही एकटे नाही. अनेक लोकांना English समजते — पण बोलायला सुरुवात कशी करायची हे कळत नाही.",
 
+  // iconKey खालील ICON_MAP शी जुळणारा असावा
   accessFeatures: [
     { iconKey: "Smartphone", label: "Mobile Friendly PDF" },
     { iconKey: "Laptop", label: "Laptop / Tablet" },
@@ -135,6 +153,7 @@ const siteContent = {
   },
 
   // --------------------------------------------------------------------
+  // TIMELINE ("रोज practice केली तर हे होईल")
   // --------------------------------------------------------------------
   timelineSection: {
     heading: "रोज practice केली तर हे होईल",
@@ -221,6 +240,94 @@ const siteContent = {
   },
 
   // --------------------------------------------------------------------
+  // CHECKOUT PAGE
+  // --------------------------------------------------------------------
+  checkoutSection: {
+    headlineLine1: "थांबा! तुम्ही",
+    headlineHighlight: "1500+ English Sentences",
+    headlineLine2: " मिळवण्यापासून एकच Step दूर आहात",
+    subtext: "Grammar rules पाठ करण्याची गरज नाही. खाली Details भरा आणि आत्ताच Lifetime Access मिळवा — फक्त ₹199 मध्ये.",
+
+    formLabels: {
+      nameLabel: "First Name",
+      namePlaceholder: "तुमचं नाव टाका",
+      emailLabel: "Email ID",
+      emailPlaceholder: "you@example.com",
+      phoneLabel: "Phone Number",
+      phonePlaceholder: "+91 98765 43210",
+    },
+
+    orderItem: {
+      itemColumnLabel: "Item",
+      priceColumnLabel: "Price",
+      planTitle: "One Time Fee",
+      planSubtitle: "One-time payment",
+      planPrice: "199",
+      companyName: "Pallavi English Classes",
+      totalLabel: "Total",
+      totalPrice: "199.00",
+    },
+
+    payment: {
+      sectionLabel: "Pay Via",
+      methods: ["razorpay", "cashfree"],
+      gatewayNote: "Completing payment with",
+      gatewayName: "Razorpay",
+      buttonLabel: "Complete Order",
+      secureNote: "100% Secure Payment",
+    },
+
+    summary: {
+      giftBoxTitle: "आज तुम्हाला हे सगळं मिळतय",
+      giftBoxSubtitle: "एकदाच Pay करा — Lifetime Access मिळेल",
+      totalCombinedValueLabel: "Total Combined Value",
+      totalValue: "₹2,096",
+      payTodayLabel: "आज तुम्ही Pay करा",
+      payTodayNote: "One-time • Lifetime Access • No Subscription",
+      finalPrice: "₹199",
+      claimedNote: "{claimed} / {total} Copies Claimed — फक्त {remaining} Slots शिल्लक",
+      ctaLabel: "GET ACCESS NOW",
+      footerNote: "Secure Checkout • Instant Email Delivery",
+    },
+
+    stickyBar: {
+      label: "Offer संपायला बाकी:",
+    },
+
+    // हेच items pricing/checkout दोन्हीकडे वापरले जातात
+    offerItems: [
+      {
+        title: "1500+ Daily Use English Sentences",
+        sub: "25 Lessons • Grammar + Vocabulary + Conversation",
+        price: "₹999",
+        free: false,
+      },
+      {
+        title: "1000+ Daily Use English Verbs",
+        sub: "रोज वापरायचे Essential Verbs • Examples",
+        price: "₹299",
+        free: false,
+      },
+      {
+        title: "25 Structured Practice Lessons",
+        sub: "Beginner ते Confident — Step-by-step",
+        price: "₹299",
+        free: false,
+      },
+      {
+        title: "Real Life Topics Practice",
+        sub: "Office • Travel • Daily Conversations",
+        price: "₹499",
+        free: true,
+      },
+    ],
+
+    claimed: 73,
+    total: 100,
+  },
+
+  // --------------------------------------------------------------------
+  // BONUS + LAUNCH OFFER (दोन कार्ड्स)
   // --------------------------------------------------------------------
   bonusSection: {
     heading: "Special Bonus",

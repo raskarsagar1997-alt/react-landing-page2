@@ -17,8 +17,26 @@ import {
   MessageSquare,
   Wallet,
   HelpCircle,
+  CreditCard,
 } from "lucide-react";
 import defaultContent from "./siteContent";
+
+// ============================================================================
+// AdminEditor.jsx
+// ----------------------------------------------------------------------------
+// A separate PAGE where every text / price / list item on the landing page
+// can be typed into a form. Hitting "Save" writes changes to the browser's
+// localStorage, and the landing page automatically picks them up (changes
+// survive a refresh).
+//
+// One-line change needed in SpokenEnglishLanding.jsx:
+//   import defaultContent from "./siteContent";
+//   const siteContent = getStoredContent(defaultContent);
+// (helper provided in contentStore.js)
+//
+// Add the route (react-router):
+//   <Route path="/admin" element={<AdminEditor />} />
+// ============================================================================
 
 const STORAGE_KEY = "spoken_english_site_content";
 
@@ -48,6 +66,7 @@ const TABS = [
   { key: "timeline", label: "Timeline", icon: Calendar },
   { key: "testimonials", label: "Testimonials", icon: MessageSquare },
   { key: "pricing", label: "Pricing", icon: Wallet },
+  { key: "checkout", label: "Checkout Page", icon: CreditCard },
   { key: "faq", label: "FAQ", icon: HelpCircle },
 ];
 
@@ -204,6 +223,11 @@ export default function AdminEditor() {
         className="sticky top-0 z-50 flex items-center justify-between gap-3 px-5 sm:px-8 py-4 flex-wrap"
         style={{ backgroundColor: c.navy, borderBottom: `1px solid ${c.navyLight}` }}
       >
+        <div>
+          <p className="text-xs mt-0.5" style={{ color: "#9FACC9" }}>
+            Edit content on the left, hit Save — the landing page updates instantly
+          </p>
+        </div>
         <div className="flex items-center gap-2">
           {saved && (
             <span className="inline-flex items-center gap-1 text-xs font-semibold" style={{ color: "#7FD9A0" }}>
@@ -472,6 +496,99 @@ export default function AdminEditor() {
                 emptyItem={{ title: "", sub: "", price: "", free: false }}
                 addLabel="Add Offer Item"
                 onChange={(next) => setArray(["pricingSection", "offerItems"], next)}
+                renderItem={(item, update) => (
+                  <>
+                    <Field label="Title" value={item.title} onChange={(v) => update({ ...item, title: v })} />
+                    <Field label="Subtitle" value={item.sub} onChange={(v) => update({ ...item, sub: v })} />
+                    <Field label="Price" value={item.price} onChange={(v) => update({ ...item, price: v })} />
+                    <label className="flex items-center gap-2 text-sm">
+                      <input
+                        type="checkbox"
+                        checked={item.free}
+                        onChange={(e) => update({ ...item, free: e.target.checked })}
+                      />
+                      <span style={{ color: c.navy }}>Show FREE badge</span>
+                    </label>
+                  </>
+                )}
+              />
+            </Card>
+          )}
+
+          {activeTab === "checkout" && (
+            <Card title="Checkout Page" description="The /checkout page shown after clicking any Buy button.">
+              <p className="text-xs font-bold uppercase tracking-wider" style={{ color: c.marigoldDark }}>
+                Headline
+              </p>
+              <Field label="Headline Line 1" value={content.checkoutSection.headlineLine1} onChange={(v) => set(["checkoutSection", "headlineLine1"], v)} />
+              <Field label="Headline Highlight" hint="(colored part)" value={content.checkoutSection.headlineHighlight} onChange={(v) => set(["checkoutSection", "headlineHighlight"], v)} />
+              <Field label="Headline Line 2" value={content.checkoutSection.headlineLine2} onChange={(v) => set(["checkoutSection", "headlineLine2"], v)} />
+              <Field label="Subtext" value={content.checkoutSection.subtext} onChange={(v) => set(["checkoutSection", "subtext"], v)} textarea />
+
+              <p className="text-xs font-bold uppercase tracking-wider mt-2" style={{ color: c.marigoldDark }}>
+                Form Fields
+              </p>
+              <div className="grid grid-cols-2 gap-3">
+                <Field label="Name Field Label" value={content.checkoutSection.formLabels.nameLabel} onChange={(v) => set(["checkoutSection", "formLabels", "nameLabel"], v)} />
+                <Field label="Name Placeholder" value={content.checkoutSection.formLabels.namePlaceholder} onChange={(v) => set(["checkoutSection", "formLabels", "namePlaceholder"], v)} />
+                <Field label="Email Field Label" value={content.checkoutSection.formLabels.emailLabel} onChange={(v) => set(["checkoutSection", "formLabels", "emailLabel"], v)} />
+                <Field label="Email Placeholder" value={content.checkoutSection.formLabels.emailPlaceholder} onChange={(v) => set(["checkoutSection", "formLabels", "emailPlaceholder"], v)} />
+                <Field label="Phone Field Label" value={content.checkoutSection.formLabels.phoneLabel} onChange={(v) => set(["checkoutSection", "formLabels", "phoneLabel"], v)} />
+                <Field label="Phone Placeholder" value={content.checkoutSection.formLabels.phonePlaceholder} onChange={(v) => set(["checkoutSection", "formLabels", "phonePlaceholder"], v)} />
+              </div>
+
+              <p className="text-xs font-bold uppercase tracking-wider mt-2" style={{ color: c.marigoldDark }}>
+                Order Item Card
+              </p>
+              <Field label="Plan Title" value={content.checkoutSection.orderItem.planTitle} onChange={(v) => set(["checkoutSection", "orderItem", "planTitle"], v)} />
+              <Field label="Plan Subtitle" value={content.checkoutSection.orderItem.planSubtitle} onChange={(v) => set(["checkoutSection", "orderItem", "planSubtitle"], v)} />
+              <Field label="Plan Price" hint="(numbers only, e.g. 199)" value={content.checkoutSection.orderItem.planPrice} onChange={(v) => set(["checkoutSection", "orderItem", "planPrice"], v)} />
+              <Field label="Company Name" value={content.checkoutSection.orderItem.companyName} onChange={(v) => set(["checkoutSection", "orderItem", "companyName"], v)} />
+              <Field label="Total Price" hint="(e.g. 199.00)" value={content.checkoutSection.orderItem.totalPrice} onChange={(v) => set(["checkoutSection", "orderItem", "totalPrice"], v)} />
+
+              <p className="text-xs font-bold uppercase tracking-wider mt-2" style={{ color: c.marigoldDark }}>
+                Payment Section
+              </p>
+              <Field label="Gateway Name" value={content.checkoutSection.payment.gatewayName} onChange={(v) => set(["checkoutSection", "payment", "gatewayName"], v)} />
+              <Field label="Pay Button Label" value={content.checkoutSection.payment.buttonLabel} onChange={(v) => set(["checkoutSection", "payment", "buttonLabel"], v)} />
+              <Field label="Secure Payment Note" value={content.checkoutSection.payment.secureNote} onChange={(v) => set(["checkoutSection", "payment", "secureNote"], v)} />
+
+              <p className="text-xs font-bold uppercase tracking-wider mt-2" style={{ color: c.marigoldDark }}>
+                Offer Summary (right side)
+              </p>
+              <Field label="Gift Box Title" value={content.checkoutSection.summary.giftBoxTitle} onChange={(v) => set(["checkoutSection", "summary", "giftBoxTitle"], v)} />
+              <Field label="Gift Box Subtitle" value={content.checkoutSection.summary.giftBoxSubtitle} onChange={(v) => set(["checkoutSection", "summary", "giftBoxSubtitle"], v)} />
+              <Field label="Total Value" hint="(strikethrough)" value={content.checkoutSection.summary.totalValue} onChange={(v) => set(["checkoutSection", "summary", "totalValue"], v)} />
+              <Field label="Final Price" value={content.checkoutSection.summary.finalPrice} onChange={(v) => set(["checkoutSection", "summary", "finalPrice"], v)} />
+              <Field label="CTA Button Label" value={content.checkoutSection.summary.ctaLabel} onChange={(v) => set(["checkoutSection", "summary", "ctaLabel"], v)} />
+              <Field label="Footer Note" value={content.checkoutSection.summary.footerNote} onChange={(v) => set(["checkoutSection", "summary", "footerNote"], v)} />
+
+              <div className="grid grid-cols-2 gap-3">
+                <Field
+                  label="Claimed"
+                  value={content.checkoutSection.claimed}
+                  onChange={(v) => set(["checkoutSection", "claimed"], Number(v) || 0)}
+                />
+                <Field
+                  label="Total"
+                  value={content.checkoutSection.total}
+                  onChange={(v) => set(["checkoutSection", "total"], Number(v) || 0)}
+                />
+              </div>
+
+              <p className="text-xs font-bold uppercase tracking-wider mt-2" style={{ color: c.marigoldDark }}>
+                Sticky Timer Bar
+              </p>
+              <Field label="Timer Bar Label" value={content.checkoutSection.stickyBar.label} onChange={(v) => set(["checkoutSection", "stickyBar", "label"], v)} />
+
+              <p className="text-xs font-bold uppercase tracking-wider mt-2" style={{ color: c.marigoldDark }}>
+                Offer Items (right-side list)
+              </p>
+              <ArrayEditor
+                items={content.checkoutSection.offerItems}
+                emptyItem={{ title: "", sub: "", price: "", free: false }}
+                addLabel="Add Offer Item"
+                onChange={(next) => setArray(["checkoutSection", "offerItems"], next)}
                 renderItem={(item, update) => (
                   <>
                     <Field label="Title" value={item.title} onChange={(v) => update({ ...item, title: v })} />
