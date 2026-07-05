@@ -1,9 +1,9 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   PlayCircle,
   Lock,
   CheckCircle2,
-  ChevronRight,
   Clock,
   User,
   LogOut,
@@ -15,6 +15,7 @@ import {
 // ============================================================================
 // Member Area / Dashboard — लॉगिन केल्यावर दिसणारा main page.
 // `courseData` object मधून सगळी module/lesson माहिती बदलता येते.
+// अनलॉक केलेल्या modules वर क्लिक केलं की /lesson page उघडतो.
 // ============================================================================
 
 const courseData = {
@@ -30,43 +31,12 @@ const courseData = {
   },
 
   modules: [
-    {
-      title: "मॉड्युल 1: पायाभूत गोष्टी",
-      status: "completed",
-      lessons: 4,
-      duration: "48 मिनिटं",
-    },
-    {
-      title: "मॉड्युल 2: शब्दसंग्रह वाढवा",
-      status: "completed",
-      lessons: 5,
-      duration: "1 तास 05 मिनिटं",
-    },
-    {
-      title: "मॉड्युल 3: वाक्यरचना आणि प्रवाह",
-      status: "in-progress",
-      lessons: 6,
-      duration: "1 तास 20 मिनिटं",
-      progress: 45,
-    },
-    {
-      title: "मॉड्युल 4: कथा लेखन",
-      status: "locked",
-      lessons: 5,
-      duration: "58 मिनिटं",
-    },
-    {
-      title: "मॉड्युल 5: संपादन आणि सुधारणा",
-      status: "locked",
-      lessons: 4,
-      duration: "50 मिनिटं",
-    },
-    {
-      title: "मॉड्युल 6: प्रकाशन आणि पुढची वाटचाल",
-      status: "locked",
-      lessons: 3,
-      duration: "40 मिनिटं",
-    },
+    { title: "मॉड्युल 1: पायाभूत गोष्टी", status: "completed", lessons: 4, duration: "48 मिनिटं" },
+    { title: "मॉड्युल 2: शब्दसंग्रह वाढवा", status: "completed", lessons: 5, duration: "1 तास 05 मिनिटं" },
+    { title: "मॉड्युल 3: वाक्यरचना आणि प्रवाह", status: "in-progress", lessons: 6, duration: "1 तास 20 मिनिटं", progress: 45 },
+    { title: "मॉड्युल 4: कथा लेखन", status: "locked", lessons: 5, duration: "58 मिनिटं" },
+    { title: "मॉड्युल 5: संपादन आणि सुधारणा", status: "locked", lessons: 4, duration: "50 मिनिटं" },
+    { title: "मॉड्युल 6: प्रकाशन आणि पुढची वाटचाल", status: "locked", lessons: 3, duration: "40 मिनिटं" },
   ],
 };
 
@@ -91,12 +61,13 @@ function StatusIcon({ status }) {
   return <Lock size={17} style={{ color: c.muted }} />;
 }
 
-function ModuleCard({ mod, index }) {
+function ModuleCard({ mod, index, onOpen }) {
   const locked = mod.status === "locked";
   const inProgress = mod.status === "in-progress";
   return (
     <div
-      className="rounded-xl p-4 sm:p-5 flex items-center gap-4 transition-transform"
+      onClick={() => !locked && onOpen(mod, index)}
+      className="module-card rounded-xl p-4 sm:p-5 flex items-center gap-4"
       style={{
         backgroundColor: c.cream,
         border: `1px solid ${inProgress ? c.marigold : c.line}`,
@@ -108,8 +79,8 @@ function ModuleCard({ mod, index }) {
       <div
         className="headline w-10 h-10 rounded-full flex items-center justify-center text-sm font-extrabold shrink-0"
         style={{
-          backgroundColor: locked ? c.paper : c.navy,
-          color: locked ? c.muted : c.gold,
+          background: locked ? c.paper : `linear-gradient(150deg, ${c.gold}, ${c.marigold})`,
+          color: locked ? c.muted : c.navy,
           border: locked ? `1px solid ${c.line}` : "none",
         }}
       >
@@ -123,10 +94,7 @@ function ModuleCard({ mod, index }) {
         </p>
         {inProgress && (
           <div className="w-full h-1.5 rounded-full overflow-hidden mt-2" style={{ backgroundColor: c.line }}>
-            <div
-              className="h-full rounded-full"
-              style={{ width: `${mod.progress}%`, background: `linear-gradient(90deg, ${c.marigold}, ${c.red})` }}
-            />
+            <div className="h-full rounded-full" style={{ width: `${mod.progress}%`, background: `linear-gradient(90deg, ${c.marigold}, ${c.red})` }} />
           </div>
         )}
       </div>
@@ -137,17 +105,17 @@ function ModuleCard({ mod, index }) {
 }
 
 export default function CourseDashboard() {
+  const navigate = useNavigate();
   const [tab, setTab] = useState("modules");
   const completedCount = courseData.modules.filter((m) => m.status === "completed").length;
-  const overallProgress = Math.round(
-    ((completedCount + 0.45) / courseData.totalModules) * 100
-  );
+  const overallProgress = Math.round(((completedCount + 0.45) / courseData.totalModules) * 100);
+
+  const openLesson = (mod, index) => {
+    navigate("/Lessonviewer", { state: { moduleIndex: index, moduleTitle: mod.title } });
+  };
 
   return (
-    <div
-      style={{ backgroundColor: c.paper, color: c.ink, fontFamily: "'Inter', sans-serif" }}
-      className="w-full min-h-screen pb-16"
-    >
+    <div style={{ backgroundColor: c.paper, color: c.ink, fontFamily: "'Inter', sans-serif" }} className="w-full min-h-screen pb-16">
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap');
         .headline { font-family: 'Baloo 2', sans-serif; }
@@ -162,30 +130,29 @@ export default function CourseDashboard() {
         .cta-btn:hover { transform: translateY(-3px); box-shadow: 0 14px 26px rgba(192,57,43,0.42), 0 6px 0 rgba(0,0,0,0.15); }
         .cta-btn:active { transform: translateY(0); }
         .tab-btn { transition: color 0.2s ease, border-color 0.2s ease; }
+        .module-card { transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease; }
+        .module-card:hover:not([style*="cursor: default"]) { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(30,42,74,0.1); border-color: ${c.gold} !important; }
+        .streak-badge { animation: flicker 2.2s ease-in-out infinite; }
+        @keyframes flicker { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
+        .avatar-ring { box-shadow: 0 0 0 2px ${c.gold}; }
+        .logout-btn { transition: transform 0.2s ease, color 0.2s ease; }
+        .logout-btn:hover { transform: scale(1.1); color: ${c.red} !important; }
       `}</style>
 
       {/* Top nav */}
-      <div
-        className="w-full px-5 sm:px-10 md:px-16 py-4 flex items-center justify-between"
-        style={{ backgroundColor: c.navy }}
-      >
+      <div className="w-full px-5 sm:px-10 md:px-16 py-4 flex items-center justify-between" style={{ backgroundColor: c.navy }}>
         <div className="flex items-center gap-2">
           <BookOpen size={20} style={{ color: c.gold }} />
-          <p className="headline font-bold text-base sm:text-lg" style={{ color: c.cream }}>
-            {courseData.courseName}
-          </p>
+          <p className="headline font-bold text-base sm:text-lg" style={{ color: c.cream }}>{courseData.courseName}</p>
         </div>
         <div className="flex items-center gap-4">
-          <div className="hidden sm:flex items-center gap-1.5 text-xs font-semibold" style={{ color: c.gold }}>
+          <div className="streak-badge hidden sm:flex items-center gap-1.5 text-xs font-semibold" style={{ color: c.gold }}>
             <Flame size={14} /> {courseData.streakDays} day streak
           </div>
-          <div
-            className="w-9 h-9 rounded-full flex items-center justify-center"
-            style={{ backgroundColor: c.navyLight }}
-          >
+          <div className="avatar-ring w-9 h-9 rounded-full flex items-center justify-center" style={{ backgroundColor: c.navyLight }}>
             <User size={16} style={{ color: c.cream }} />
           </div>
-          <LogOut size={17} style={{ color: "#C9D2E3", cursor: "pointer" }} />
+          <LogOut size={17} className="logout-btn" style={{ color: "#C9D2E3", cursor: "pointer" }} />
         </div>
       </div>
 
@@ -199,36 +166,24 @@ export default function CourseDashboard() {
             तुम्ही आतापर्यंत {completedCount} पैकी {courseData.totalModules} modules पूर्ण केले आहेत.
           </p>
           <div className="w-full h-2.5 rounded-full overflow-hidden mt-3" style={{ backgroundColor: c.line }}>
-            <div
-              className="h-full rounded-full"
-              style={{ width: `${overallProgress}%`, background: `linear-gradient(90deg, ${c.green}, #56A87B)` }}
-            />
+            <div className="h-full rounded-full" style={{ width: `${overallProgress}%`, background: `linear-gradient(90deg, ${c.green}, #56A87B)` }} />
           </div>
         </div>
 
         {/* Continue watching card */}
-        <div
-          className="rounded-xl p-5 sm:p-6 flex flex-col sm:flex-row items-center gap-5"
-          style={{ background: `linear-gradient(135deg, ${c.navy}, ${c.navyLight})` }}
-        >
-          <div
-            className="w-full sm:w-40 h-24 rounded-lg flex items-center justify-center shrink-0"
-            style={{ backgroundColor: "rgba(255,255,255,0.08)" }}
-          >
+        <div className="rounded-xl p-5 sm:p-6 flex flex-col sm:flex-row items-center gap-5" style={{ background: `linear-gradient(135deg, ${c.navy}, ${c.navyLight})` }}>
+          <div className="w-full sm:w-40 h-24 rounded-lg flex items-center justify-center shrink-0" style={{ backgroundColor: "rgba(255,255,255,0.08)" }}>
             <PlayCircle size={36} style={{ color: c.gold }} />
           </div>
           <div className="flex-1">
-            <p className="text-[11px] font-bold uppercase tracking-wide" style={{ color: c.gold }}>
-              जिथून सोडलं तिथून सुरू करा
-            </p>
-            <p className="text-sm font-bold mt-1" style={{ color: c.cream }}>
-              {courseData.continueWatching.moduleTitle}
-            </p>
-            <p className="text-xs mt-0.5" style={{ color: "#C9D2E3" }}>
-              {courseData.continueWatching.lessonTitle}
-            </p>
+            <p className="text-[11px] font-bold uppercase tracking-wide" style={{ color: c.gold }}>जिथून सोडलं तिथून सुरू करा</p>
+            <p className="text-sm font-bold mt-1" style={{ color: c.cream }}>{courseData.continueWatching.moduleTitle}</p>
+            <p className="text-xs mt-0.5" style={{ color: "#C9D2E3" }}>{courseData.continueWatching.lessonTitle}</p>
           </div>
-          <button className="cta-btn inline-flex items-center gap-2 rounded-md font-semibold px-5 py-2.5 text-sm shrink-0">
+          <button
+            onClick={() => navigate("/lesson", { state: { moduleTitle: courseData.continueWatching.moduleTitle } })}
+            className="cta-btn inline-flex items-center gap-2 rounded-md font-semibold px-5 py-2.5 text-sm shrink-0"
+          >
             <PlayCircle size={16} /> सुरू ठेवा
           </button>
         </div>
@@ -243,30 +198,23 @@ export default function CourseDashboard() {
               key={t.id}
               onClick={() => setTab(t.id)}
               className="tab-btn text-sm font-bold pb-3 border-b-2"
-              style={{
-                color: tab === t.id ? c.marigoldDark : c.muted,
-                borderColor: tab === t.id ? c.marigold : "transparent",
-              }}
+              style={{ color: tab === t.id ? c.marigoldDark : c.muted, borderColor: tab === t.id ? c.marigold : "transparent" }}
             >
               {t.label}
             </button>
           ))}
         </div>
 
-        {/* Module list */}
         {tab === "modules" && (
           <div className="flex flex-col gap-3">
             {courseData.modules.map((mod, i) => (
-              <ModuleCard key={i} mod={mod} index={i} />
+              <ModuleCard key={i} mod={mod} index={i} onOpen={openLesson} />
             ))}
           </div>
         )}
 
         {tab === "certificate" && (
-          <div
-            className="rounded-xl p-8 flex flex-col items-center text-center gap-3"
-            style={{ backgroundColor: c.cream, border: `1px dashed ${c.line}` }}
-          >
+          <div className="rounded-xl p-8 flex flex-col items-center text-center gap-3" style={{ backgroundColor: c.cream, border: `1px dashed ${c.line}` }}>
             <Award size={32} style={{ color: c.gold }} />
             <p className="text-sm font-bold" style={{ color: c.navy }}>Certificate अजून unlock झालेलं नाही</p>
             <p className="text-xs max-w-xs" style={{ color: c.muted }}>

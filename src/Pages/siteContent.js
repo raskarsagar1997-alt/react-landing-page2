@@ -327,6 +327,68 @@ const siteContent = {
   },
 
   // --------------------------------------------------------------------
+  // THANK YOU / ACCESS PAGE (Checkout नंतरचं page)
+  // --------------------------------------------------------------------
+  thankYouSection: {
+    successBadge: "✅ Payment Successful",
+    heading: "Welcome Aboard! 🎉",
+    subheading: "तुमचं Lifetime Access आता Ready आहे. खाली दिलेले सगळे E-Books लगेच Download करा.",
+
+    receipt: {
+      label: "Order Confirmation",
+      orderIdLabel: "Order ID",
+      orderIdSample: "#PEC" ,
+      amountLabel: "Amount Paid",
+      amountValue: "₹199",
+      dateLabel: "Purchase Date",
+      emailNote: "याचीच एक copy तुमच्या Email वर सुद्धा पाठवली आहे — Inbox किंवा Spam folder check करा.",
+    },
+
+    downloadsHeading: "तुमचे E-Books",
+    downloadItems: [
+      {
+        title: "1500+ Daily Use English Sentences",
+        sub: "Main E-Book • 25 Lessons",
+        buttonLabel: "Download PDF",
+      },
+      {
+        title: "1000+ Daily Use English Verbs",
+        sub: "Bonus E-Book",
+        buttonLabel: "Download PDF",
+      },
+      {
+        title: "25 Structured Practice Lessons",
+        sub: "Bonus E-Book",
+        buttonLabel: "Download PDF",
+      },
+      {
+        title: "Real Life Topics Practice",
+        sub: "Bonus E-Book",
+        buttonLabel: "Download PDF",
+      },
+    ],
+
+    community: {
+      heading: "Support हवा आहे?",
+      text: "आमच्या WhatsApp Community मध्ये जॉईन व्हा — रोज नवीन Practice Sentences आणि शंकांचं निरसन मिळेल.",
+      buttonLabel: "Join WhatsApp Group",
+    },
+
+    nextSteps: {
+      heading: "पुढे काय करायचं?",
+      steps: [
+        "रोज 15-20 मिनिटं एक Lesson वाचा आणि मोठ्याने बोला",
+        "Real Life Topics मधले Sentences रोजच्या conversation मध्ये वापरा",
+        "आठवड्यातून एकदा मागचे Lessons Revise करा",
+      ],
+    },
+
+    footerNote: "काही अडचण आल्यास आमच्याशी संपर्क करा — आम्ही मदतीसाठी आहोत.",
+    supportEmail: "support@pallavienglishclasses.com",
+    backToHomeLabel: "Home वर परत जा",
+  },
+
+  // --------------------------------------------------------------------
   // BONUS + LAUNCH OFFER (दोन कार्ड्स)
   // --------------------------------------------------------------------
   bonusSection: {
