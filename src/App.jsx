@@ -7,7 +7,6 @@ import AdminEditor from "./Pages/AdminEditor"
 import Accessgrantedpage from "./Pages/Accessgrantedpage" 
 import Coursedashboard from "./Pages/Coursedashboard"
 import Lessonviewer from "./Pages/Lessonviewer"
-import ThankYouPage from "./pages/ThankYouPage";
 
 import "./App.css";
 
@@ -23,7 +22,6 @@ export default function App() {
         <Route path="/Coursedashboard" element={<Coursedashboard />} />
         <Route path="/Lessonviewer" element={<Lessonviewer />} />
 
-<Route path="/thank-you" element={<ThankYouPage />} />
 
 
       </Routes>
